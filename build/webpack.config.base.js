@@ -1,13 +1,18 @@
-const path = require('path')
-// const webpack = require('webpack')
-// const VueLoaderPlugin = require('vue-loader/lib/plugin')
-// const HTMLPlugin = require('html-webpack-plugin')
-// const ExtractPlugin = require('extract-text-webpack-plugin')
+//  webpack基础配置
 
-const isDev = process.env.NODE_ENV === 'development'
+//  path 模块用于处理文件和目录的路径。
+//  path.join() 方法使用平台特定的分隔符把全部给定的 path 片段连接到一起，并规范化生成的路径
+//      path.join('/foo', 'bar', 'baz/asdf', 'quux', '..');  返回: '/foo/bar/baz/asdf'
+//  path.resolve() 方法会把一个路径或路径片段的序列解析为一个绝对路径。
+//      给定的路径的序列是从右往左被处理的，后面每个 path 被依次解析，直到构造完成一个绝对路径。如果处理完全部给定的 path 片段后还未生成一个绝对路径，则当前工作目录会被用上。
+//      例如，给定的路径片段的序列为：/foo、/bar、baz，则调用 path.resolve('/foo', '/bar', 'baz') 会返回 /bar/baz。
+const path = require('path')  
 
 const config = {
-  target: 'web',
+  //  构建目标（target）：因为服务器和浏览器代码都可以用JavaScript编写，所以webpack提供了多种构建目标(target)，可以在webpack配置中设置
+  //  每个target都有各种部署(deployment)/环境(environment)特定的附加项，以支持满足其需求。
+  //  示例：target: 'node' —— 用node，webpack会编译为用于「类Node.js」环境（使用Node.js的require，而不是使用任意内置模块（如fs或path）来加载chunk）。
+  target: 'web', //   默认是 'web'，可省略
   entry: path.join(__dirname, '../client/index.js'),
   output: {
     filename: 'bundle.[hash:8].js',
@@ -16,19 +21,23 @@ const config = {
   module: {
     rules: [
       {
+        // 处理vue文件 loader
         test: /\.vue$/,
         loader: 'vue-loader'
       },
       {
+        //  处理jsx文件 loader
         test: /\.jsx$/,
         loader: 'babel-loader'
       },
       {
+        //  处理JavaScript文件loader
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
       },
       {
+        //  处理图片loader
         test: /\.(gif|jpg|jpeg|png|svg)$/,
         use: [
           {
@@ -41,78 +50,7 @@ const config = {
         ]
       }
     ]
-  },
-  // plugins: [
-  //   new webpack.DefinePlugin({
-  //     'process.env': {
-  //       NODE_ENV: isDev ? '"development"' : '"production"'
-  //     }
-  //   }),
-  //   // make sure to include the plugin for the magic
-  //   new VueLoaderPlugin(),
-  //   new HTMLPlugin,
-  // ],
+  }
 }
-
-// if (isDev) {
-//   config.module.rules.push({
-//       test: /\.styl/,
-//       use: [
-//         'style-loader',
-//         'css-loader',
-//         {
-//           loader: 'postcss-loader',
-//           options: {
-//             sourceMap: true,
-//           }
-//         },
-//         'stylus-loader'
-//       ]
-//   })
-//   config.devtool = '#cheap-module-eval-source-map'
-//   config.devServer = {
-//     port: 8000,
-//     host: '0.0.0.0',
-//     overlay: {
-//       errors: true
-//     },
-//     hot: true
-//   },
-//   config.plugins.push(
-//     new webpack.HotModuleReplacementPlugin(),
-//     new webpack.NoEmitOnErrorsPlugin()
-//   )
-// } else {
-//   config.entry = {
-//     app: path.join(__dirname, 'src/index.js'),
-//     vendor: ['vue']
-//   }
-//   config.output.filename = '[name].[chunkhash:8].js',
-//   config.module.rules.push({
-//     test: /\.styl/,
-//     use: ExtractPlugin.extract({
-//       fallback: 'style-loader',
-//       use: [
-//         'css-loader',
-//         {
-//           loader: 'postcss-loader',
-//           options: {
-//             sourceMap: true,
-//           }
-//         },
-//         'stylus-loader'
-//       ]
-//     })
-//   })
-//   config.plugins.push(
-//     new ExtractPlugin('style.[contentHash:8].css'),
-//     new webpack.optimize.CommonsChunkPlugin({
-//       name: 'vendor'
-//     }),
-//     new webpack.optimize.CommonsChunkPlugin({
-//       name: 'runtime'
-//     })
-//   )
-// }
 
 module.exports = config
