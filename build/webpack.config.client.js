@@ -14,6 +14,7 @@ const baseConfig = require('./webpack.config.base')  //  引入 webpack 基础�
 //  其实NODE_ENV只是一个用户自定义的变量，但是这个 NODE_ENV 变量语义非常恰当，并且在前端工程化配置中作为判断生产环境/开发环境的依据是非常自然而方便的事情，因而在前端工程化中逐渐成为一个事实规范。
 //  当我们在服务启动时配置 NODE_ENV,或在代码中给 process.env.NODE_ENV 赋值，js便能通过 process.env.NODE_ENV 获取信息。
 const isDev = process.env.NODE_ENV === 'development'  
+console.log('webpack.vonfig.client isDev: ',isDev);
 
 const defaultPlugin = [
   //  DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用。
@@ -26,41 +27,42 @@ const defaultPlugin = [
   new HTMLPlugin,
 ]
 
-const devServer = {
-  port: 8000,
-  host: '0.0.0.0',
+const devServer = { //  在开发模式下，DevServer 提供虚拟服务器，进行开发和调试。
+  port: 8000,  //  端口号
+  host: '0.0.0.0',  //  服务器的主机号
   overlay: {
-    errors: true
+    errors: true  // 用来在编译出错的时候，在浏览器页面上显示错误
   },
-  hot: true
+  hot: true  //  热模块替换机制
 }
 let config
 
 if (isDev) {
   config = merge(baseConfig, {
-    devtool: '#cheap-module-eval-source-map',
+    devtool: '#cheap-module-eval-source-map',  // Source Map
     module: {
       rules: [
         {
           test: /\.styl/,
           use: [
-            'style-loader',
-            'css-loader',
+            //  注意： webpack 是从下往上执行的。所以执行顺序是：stylus-loader处理 .styl 文件之后，将处理之后的文件依次经过 postcss-loader 、 css-loader、 style-loader 处理
+            'style-loader',  //  用于将 css-loader 打包好的css模块，插入到html文件中，变成一个 <style>标签
+            'css-loader',  //  用于处理图片路径（其实也包括例如导入css文件的路径），并且会将css样式打包进js文件中（以模块的形式打包导入）
             {
               loader: 'postcss-loader',
               options: {
                 sourceMap: true,
               }
             },
-            'stylus-loader'
+            'stylus-loader'  //  用于处理 .styl 文件
           ]
         }
       ]
     },
     devServer,
     plugins: defaultPlugin.concat([
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin()
+      new webpack.HotModuleReplacementPlugin(),  // HMR插件将HMR Runtime代码嵌入到bundle中，能够操作APP代码，完成代码替换
+      new webpack.NoEmitOnErrorsPlugin()  //  报错提示插件:报错不阻塞，但是编译后给出提示
     ])
   })
 } else {
@@ -82,6 +84,14 @@ if (isDev) {
           //    > publicfile：用来覆盖项目路径，生成该css文件的文件路径
           fallback: 'style-loader',  
           use: [
+            // 使用 CSS Module
+            // {
+            //   loader: 'css-loader',
+            //   options: {
+            //     module: true,
+            //     localIdentName: isDev ? '[path]-[name]-[hash:base64:5]' : '[hash:base64:5]',
+            //   }
+            // },
             'css-loader',
             {
               loader: 'postcss-loader',
@@ -97,10 +107,10 @@ if (isDev) {
     plugins: defaultPlugin.concat([
       new ExtractPlugin('style.[contentHash:8].css'),
       new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor'
+        name: 'vendor'  // 第三方库的打包：为了把第三方库拆分出来（用<script>标签单独加载），我们还需要用webpack的CommonsChunkPlugin插件来把它提取一下，这样他就不会与业务代码打包到一起了。
       }),
       new webpack.optimize.CommonsChunkPlugin({
-        name: 'runtime'
+        name: 'runtime'  //  独立 webpack 生成代码（取一个 entry 中没有的名字，即可独立出生成代码）
       })
     ])
   })

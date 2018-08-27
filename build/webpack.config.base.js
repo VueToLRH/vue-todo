@@ -7,6 +7,10 @@
 //      给定的路径的序列是从右往左被处理的，后面每个 path 被依次解析，直到构造完成一个绝对路径。如果处理完全部给定的 path 片段后还未生成一个绝对路径，则当前工作目录会被用上。
 //      例如，给定的路径片段的序列为：/foo、/bar、baz，则调用 path.resolve('/foo', '/bar', 'baz') 会返回 /bar/baz。
 const path = require('path')  
+const createVueLoaderOptions = require('./vue-loader.config')
+
+const isDev = process.env.NODE_ENV === 'development'
+console.log('isDev: ',isDev);
 
 const config = {
   //  构建目标（target）：因为服务器和浏览器代码都可以用JavaScript编写，所以webpack提供了多种构建目标(target)，可以在webpack配置中设置
@@ -20,10 +24,17 @@ const config = {
   },
   module: {
     rules: [
+      // {
+      //   text: /\.(vue|js|jsx)$/,
+      //   loader: 'eslint-loader',
+      //   exclude: /node_modules/,
+      //   enforce: 'pre' //  预处理，在使用真正的loader之前，都会经过 eslint-loader 进行处理
+      // },
       {
         // 处理vue文件 loader
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: createVueLoaderOptions(isDev)
       },
       {
         //  处理jsx文件 loader
@@ -34,7 +45,7 @@ const config = {
         //  处理JavaScript文件loader
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/  // exclude 排除，不需要编译的目录，提高编译速度
       },
       {
         //  处理图片loader
@@ -44,7 +55,7 @@ const config = {
             loader: 'url-loader',
             options: {
               limit: 1024,
-              name: 'resources/[path][name]-[hash:8].[ext]'
+              name: 'resources/[path][name]-[hash:8].[ext]'  // 生成到dist底下的resource中，路径按照原路径已有的名字命名
             }
           }
         ]
