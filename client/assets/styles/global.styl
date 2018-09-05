@@ -6,7 +6,7 @@ html, body{
 }
 body{
   background-image: url('../images/bg.jpeg')
-  background-size: cover 
+  background-size: cover
   //把背景图像扩展至足够大，以使背景图像完全覆盖背景区域。背景图像的某些部分也许无法显示在背景定位区域中。
   background-position: center;
   font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -18,3 +18,8 @@ body{
   // subpixel-antialiased:字体亚像素级平滑，主要为了在非视网膜设备下更好的显示。
   font-weight: 300;
 }
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity .5s
+.fade-enter, .fade-leave-to
+  opacity: 0

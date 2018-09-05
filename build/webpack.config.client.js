@@ -13,7 +13,7 @@ const baseConfig = require('./webpack.config.base')  //  引入 webpack 基础�
 //  Node 中有全局变量 process 表示当前node进程，process.env包含着关于系统环境的信息。process.env 中并不存在 NODE_ENV 这个东西。
 //  其实NODE_ENV只是一个用户自定义的变量，但是这个 NODE_ENV 变量语义非常恰当，并且在前端工程化配置中作为判断生产环境/开发环境的依据是非常自然而方便的事情，因而在前端工程化中逐渐成为一个事实规范。
 //  当我们在服务启动时配置 NODE_ENV,或在代码中给 process.env.NODE_ENV 赋值，js便能通过 process.env.NODE_ENV 获取信息。
-const isDev = process.env.NODE_ENV === 'development'  
+const isDev = process.env.NODE_ENV === 'development'
 console.log('webpack.vonfig.client isDev: ',isDev);
 
 const defaultPlugin = [
@@ -24,7 +24,9 @@ const defaultPlugin = [
     }
   }),
   new VueLoaderPlugin(),  // make sure to include the plugin for the magic
-  new HTMLPlugin,
+  new HTMLPlugin({
+    template: path.join(__dirname, 'template.html')
+  })
 ]
 
 const devServer = { //  在开发模式下，DevServer 提供虚拟服务器，进行开发和调试。
@@ -82,7 +84,7 @@ if (isDev) {
           //    > use：指需要什么样的loader去编译文件，如果源文件是.css所以选择css-loader
           //    > fallback：编译后用什么loader来提取css文件
           //    > publicfile：用来覆盖项目路径，生成该css文件的文件路径
-          fallback: 'style-loader',  
+          fallback: 'style-loader',
           use: [
             // 使用 CSS Module
             // {
