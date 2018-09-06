@@ -6,7 +6,7 @@
 //  path.resolve() 方法会把一个路径或路径片段的序列解析为一个绝对路径。
 //      给定的路径的序列是从右往左被处理的，后面每个 path 被依次解析，直到构造完成一个绝对路径。如果处理完全部给定的 path 片段后还未生成一个绝对路径，则当前工作目录会被用上。
 //      例如，给定的路径片段的序列为：/foo、/bar、baz，则调用 path.resolve('/foo', '/bar', 'baz') 会返回 /bar/baz。
-const path = require('path')  
+const path = require('path')
 const createVueLoaderOptions = require('./vue-loader.config')
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -20,7 +20,8 @@ const config = {
   entry: path.join(__dirname, '../client/index.js'),
   output: {
     filename: 'bundle.[hash:8].js',
-    path: path.join(__dirname, '../dist')
+    path: path.join(__dirname, '../dist'),
+    publicPath: '/public/'
   },
   module: {
     rules: [

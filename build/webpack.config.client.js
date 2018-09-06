@@ -35,6 +35,9 @@ const devServer = { //  在开发模式下，DevServer 提供虚拟服务器，�
   overlay: {
     errors: true  // 用来在编译出错的时候，在浏览器页面上显示错误
   },
+  historyApiFallback: {
+    index: '/public/index.html'
+  },
   hot: true  //  热模块替换机制
 }
 let config
