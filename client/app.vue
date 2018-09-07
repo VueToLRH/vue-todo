@@ -58,7 +58,7 @@ export default {
     // }, 1000)
     // 通过 mapMutations 调用 模块a 中的 mutation 方式
     // this['a/updateText']('123')  // mapMutation 数组形式调用
-      this.moduleAUpdateText('123')   // mapMutation 对象形式调用
+    // this.moduleAUpdateText('123') // mapMutation 对象形式调用
 
     // 使用 vuex actions 异步修改状态
     // actions 异步修改状态：使用 this.$store.dispatch
@@ -79,7 +79,7 @@ export default {
     ...mapActions(['updateCountAsync', 'a/add', 'b/testAction']),
     // ...mapMutations(['updateCount', 'a/updateText'])
     ...mapMutations({
-      updateCount: 'updateCount',  // 或者 updateCount
+      // updateCount: 'updateCount', // 或者 updateCount
       moduleAUpdateText: 'a/updateText'
     })
   },
@@ -109,10 +109,10 @@ export default {
     // fullName () {
     //   return this.$store.getters.fullName  // 获取getters：使用全局 $store 对象获取
     // }
-    ...mapGetters({  // 获取getters：对象形式
-      'fullName': 'fullName',  // 获取getters：store 全局的 getters
-      textPlus: 'a/textPlus'   // 获取getters：模块a 中的 getters
-    })
+    // ...mapGetters({ // 获取getters：对象形式
+    //   'fullName': 'fullName', // 获取getters：store 全局的 getters
+    //   textPlus: 'a/textPlus' // 获取getters：模块a 中的 getters
+    // })
     // ...mapGetters(['fullName','a/textPlus']), // 获取getters：数组形式
   }
 }
