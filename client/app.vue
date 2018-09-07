@@ -58,7 +58,7 @@ export default {
     // }, 1000)
     // 通过 mapMutations 调用 模块a 中的 mutation 方式
     // this['a/updateText']('123')  // mapMutation 数组形式调用
-    this.moduleAUpdateText('123')   // mapMutation 对象形式调用
+      this.moduleAUpdateText('123')   // mapMutation 对象形式调用
 
     // 使用 vuex actions 异步修改状态
     // actions 异步修改状态：使用 this.$store.dispatch
