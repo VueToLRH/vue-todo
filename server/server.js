@@ -26,3 +26,19 @@ app.use(async (ctx, next) => {
 //      如果不是开发环境，可以写一个友善的提醒文字，例如：“please try again later”。
 //      这就是最简单的一个koa中间件，用来记录所有的请求及出现的错误，并且返回一个错误信息。
 
+let pageRouter
+if (isDev) {
+  pageRouter = require('./routers/dev-ssr')
+  // pageRouter = require('./routers/dev-ssr-no-bundle')
+} else {
+  // pageRouter = require('./routers/ssr')
+  pageRouter = require('./routers/ssr-no-bundle')
+}
+app.use(pageRouter.routes()).use(pageRouter.allowedMethods());
+
+const HOST = process.env.HOST || '0.0.0.0'
+const PORT = process.env.PORT || 3333
+
+app.listen(PORT, HOST, () => {
+  console.log(`server is listening on ${HOST}:${PORT}`)
+})
